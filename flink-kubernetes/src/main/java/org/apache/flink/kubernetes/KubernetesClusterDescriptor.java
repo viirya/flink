@@ -228,7 +228,7 @@ public class KubernetesClusterDescriptor implements ClusterDescriptor<String> {
 				new KubernetesJobManagerParameters(flinkConfig, clusterSpecification);
 
 			final KubernetesJobManagerSpecification kubernetesJobManagerSpec =
-				KubernetesJobManagerFactory.buildKubernetesJobManagerSpecification(kubernetesJobManagerParameters);
+				KubernetesJobManagerFactory.buildKubernetesJobManagerSpecification(client, kubernetesJobManagerParameters);
 
 			client.createJobManagerComponent(kubernetesJobManagerSpec);
 

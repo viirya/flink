@@ -25,6 +25,7 @@ import org.apache.flink.kubernetes.kubeclient.resources.KubernetesPod;
 import org.apache.flink.kubernetes.kubeclient.resources.KubernetesService;
 import org.apache.flink.kubernetes.kubeclient.resources.KubernetesWatch;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -138,6 +139,16 @@ public interface FlinkKubeClient extends AutoCloseable {
 	 * @return Return the ConfigMap, or empty if the ConfigMap does not exist.
 	 */
 	Optional<KubernetesConfigMap> getConfigMap(String name);
+
+	/**
+	 * Load a Pod from given template file.
+	 *
+	 * @param templateFile the template file object.
+	 * @param containerName the optional container name.
+	 *
+	 * @return Return the Pod loaded from the template file.
+	 */
+	FlinkPod loadPodFromTemplate(File templateFile, Optional<String> containerName);
 
 	/**
 	 * Update an existing ConfigMap with the data. Benefit from <a href=https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions>

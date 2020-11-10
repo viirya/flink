@@ -36,11 +36,13 @@ import org.apache.flink.runtime.concurrent.FutureUtils;
 import org.apache.flink.util.ExceptionUtils;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.LoadBalancerStatus;
 import io.fabric8.kubernetes.api.model.OwnerReference;
 import io.fabric8.kubernetes.api.model.OwnerReferenceBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServicePort;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
@@ -50,6 +52,7 @@ import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -261,6 +264,49 @@ public class Fabric8FlinkKubeClient implements FlinkKubeClient {
 	public Optional<KubernetesConfigMap> getConfigMap(String name) {
 		final ConfigMap configMap = this.internalClient.configMaps().inNamespace(namespace).withName(name).get();
 		return configMap == null ? Optional.empty() : Optional.of(new KubernetesConfigMap(configMap));
+	}
+
+	@Override
+	public FlinkPod loadPodFromTemplate(File templateFile, Optional<String> containerName) {
+		try {
+			Pod pod = this.internalClient.pods().load(templateFile).get();
+			List<Container> containers = pod.getSpec().getContainers();
+
+			if (containers.size() == 0) {
+				return new FlinkPod.Builder().build();
+			} else {
+				if (containerName.isPresent()) {
+					Map<Boolean, List<Container>> results =
+						containers
+							.stream()
+							.collect(Collectors.partitioningBy(c -> c.getName().equals(containerName.get())));
+
+					pod = new PodBuilder(pod)
+						.editSpec()
+						.withContainers(results.get(false))
+						.endSpec()
+						.build();
+					return new FlinkPod.Builder()
+						.withPod(pod)
+						.withMainContainer(results.get(true).get(0))
+						.build();
+				} else {
+					// Take the first container if no container name is given.
+					pod = new PodBuilder(pod)
+						.editSpec()
+						.withContainers(containers.subList(1, containers.size()))
+						.endSpec()
+						.build();
+					return new FlinkPod.Builder()
+						.withPod(pod)
+						.withMainContainer(containers.get(0))
+						.build();
+				}
+			}
+		} catch (Throwable throwable) {
+			LOG.debug("Failed to load pod template file {}.", templateFile.getPath());
+			throw throwable;
+		}
 	}
 
 	@Override

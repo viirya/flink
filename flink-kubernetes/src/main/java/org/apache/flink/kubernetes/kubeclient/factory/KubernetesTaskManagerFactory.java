@@ -18,6 +18,7 @@
 
 package org.apache.flink.kubernetes.kubeclient.factory;
 
+import org.apache.flink.kubernetes.kubeclient.FlinkKubeClient;
 import org.apache.flink.kubernetes.kubeclient.FlinkPod;
 import org.apache.flink.kubernetes.kubeclient.decorators.EnvSecretsDecorator;
 import org.apache.flink.kubernetes.kubeclient.decorators.FlinkConfMountDecorator;
@@ -33,13 +34,24 @@ import org.apache.flink.kubernetes.kubeclient.resources.KubernetesPod;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
 
+import java.io.File;
+import java.util.Optional;
+
 /**
  * Utility class for constructing the TaskManager Pod on the JobManager.
  */
 public class KubernetesTaskManagerFactory {
 
-	public static KubernetesPod buildTaskManagerKubernetesPod(KubernetesTaskManagerParameters kubernetesTaskManagerParameters) {
+	public static KubernetesPod buildTaskManagerKubernetesPod(
+			FlinkKubeClient client,
+			KubernetesTaskManagerParameters kubernetesTaskManagerParameters) {
 		FlinkPod flinkPod = new FlinkPod.Builder().build();
+
+		Optional<String> templateFile = kubernetesTaskManagerParameters.getPodTemplateFile();
+		if (templateFile.isPresent()) {
+			Optional<String> containerName = kubernetesTaskManagerParameters.getContainerName();
+			flinkPod = client.loadPodFromTemplate(new File(templateFile.get()), containerName);
+		}
 
 		final KubernetesStepDecorator[] stepDecorators = new KubernetesStepDecorator[] {
 			new InitTaskManagerDecorator(kubernetesTaskManagerParameters),

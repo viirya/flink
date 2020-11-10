@@ -18,6 +18,7 @@
 
 package org.apache.flink.kubernetes.kubeclient.factory;
 
+import org.apache.flink.kubernetes.kubeclient.FlinkKubeClient;
 import org.apache.flink.kubernetes.kubeclient.FlinkPod;
 import org.apache.flink.kubernetes.kubeclient.KubernetesJobManagerSpecification;
 import org.apache.flink.kubernetes.kubeclient.decorators.EnvSecretsDecorator;
@@ -41,10 +42,12 @@ import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Utility class for constructing all the Kubernetes components on the client-side. This can
@@ -53,8 +56,15 @@ import java.util.Map;
 public class KubernetesJobManagerFactory {
 
 	public static KubernetesJobManagerSpecification buildKubernetesJobManagerSpecification(
+			FlinkKubeClient client,
 			KubernetesJobManagerParameters kubernetesJobManagerParameters) throws IOException {
 		FlinkPod flinkPod = new FlinkPod.Builder().build();
+
+		Optional<String> templateFile = kubernetesJobManagerParameters.getPodTemplateFile();
+		if (templateFile.isPresent()) {
+			Optional<String> containerName = kubernetesJobManagerParameters.getContainerName();
+			flinkPod = client.loadPodFromTemplate(new File(templateFile.get()), containerName);
+		}
 		List<HasMetadata> accompanyingResources = new ArrayList<>();
 
 		final KubernetesStepDecorator[] stepDecorators = new KubernetesStepDecorator[] {

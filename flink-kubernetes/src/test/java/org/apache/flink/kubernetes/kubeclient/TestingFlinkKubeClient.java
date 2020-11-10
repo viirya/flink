@@ -27,6 +27,7 @@ import org.apache.flink.kubernetes.kubeclient.resources.KubernetesWatch;
 import org.apache.flink.runtime.concurrent.FutureUtils;
 import org.apache.flink.util.Preconditions;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -116,6 +117,11 @@ public class TestingFlinkKubeClient implements FlinkKubeClient {
 
 	@Override
 	public Optional<Endpoint> getRestEndpoint(String clusterId) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public FlinkPod loadPodFromTemplate(File templateFile, Optional<String> containerName) {
 		throw new UnsupportedOperationException();
 	}
 

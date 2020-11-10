@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.apache.flink.core.testutils.CommonTestUtils.assertThrows;
@@ -109,6 +110,16 @@ public class AbstractKubernetesParametersTest extends TestLogger {
 
 		@Override
 		public List<Map<String, String>> getTolerations() {
+			throw new UnsupportedOperationException("NOT supported");
+		}
+
+		@Override
+		public Optional<String> getPodTemplateFile() {
+			throw new UnsupportedOperationException("NOT supported");
+		}
+
+		@Override
+		public Optional<String> getContainerName() {
 			throw new UnsupportedOperationException("NOT supported");
 		}
 	}

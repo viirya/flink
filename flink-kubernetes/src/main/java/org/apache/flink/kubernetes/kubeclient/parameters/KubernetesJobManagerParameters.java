@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
@@ -78,6 +79,16 @@ public class KubernetesJobManagerParameters extends AbstractKubernetesParameters
 	@Override
 	public Map<String, String> getAnnotations() {
 		return flinkConfig.getOptional(KubernetesConfigOptions.JOB_MANAGER_ANNOTATIONS).orElse(Collections.emptyMap());
+	}
+
+	@Override
+	public Optional<String> getPodTemplateFile() {
+		return flinkConfig.getOptional(KubernetesConfigOptions.JOB_MANAGER_POD_TEMPLATE_FILE);
+	}
+
+	@Override
+	public Optional<String> getContainerName() {
+		return flinkConfig.getOptional(KubernetesConfigOptions.JOB_MANAGER_CONTAINER_NAME);
 	}
 
 	@Override

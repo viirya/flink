@@ -41,12 +41,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * General tests for the {@link InitJobManagerDecorator}.
@@ -69,6 +71,8 @@ public class InitTaskManagerDecoratorTest extends KubernetesTaskManagerTestBase 
 	private static final String RESOURCE_NAME = "test";
 	private static final Long RESOURCE_AMOUNT = 2L;
 	private static final String RESOURCE_CONFIG_KEY = "test.com/test";
+	private static final String podTemplateFile =
+		InitTaskManagerDecoratorTest.class.getResource("/podTemplate.yaml").getPath();
 
 	private Pod resultPod;
 	private Container resultMainContainer;
@@ -80,6 +84,7 @@ public class InitTaskManagerDecoratorTest extends KubernetesTaskManagerTestBase 
 		this.flinkConfig.set(KubernetesConfigOptions.CONTAINER_IMAGE_PULL_SECRETS, IMAGE_PULL_SECRETS);
 		this.flinkConfig.set(KubernetesConfigOptions.TASK_MANAGER_ANNOTATIONS, ANNOTATIONS);
 		this.flinkConfig.setString(KubernetesConfigOptions.TASK_MANAGER_TOLERATIONS.key(), TOLERATION_STRING);
+		this.flinkConfig.set(KubernetesConfigOptions.TASK_MANAGER_POD_TEMPLATE_FILE, podTemplateFile);
 
 		// Set up external resource configs
 		flinkConfig.setString(ExternalResourceOptions.EXTERNAL_RESOURCE_LIST.key(), RESOURCE_NAME);
@@ -185,6 +190,12 @@ public class InitTaskManagerDecoratorTest extends KubernetesTaskManagerTestBase 
 	public void testPodAnnotations() {
 		final Map<String, String> resultAnnotations = kubernetesTaskManagerParameters.getAnnotations();
 		assertThat(resultAnnotations, is(equalTo(ANNOTATIONS)));
+	}
+
+	@Test
+	public void testPodTemplate() {
+		Optional<String> podTemplateFile = kubernetesTaskManagerParameters.getPodTemplateFile();
+		assertTrue(podTemplateFile.isPresent());
 	}
 
 	@Test

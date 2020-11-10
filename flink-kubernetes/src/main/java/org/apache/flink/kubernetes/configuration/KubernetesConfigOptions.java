@@ -213,6 +213,30 @@ public class KubernetesConfigOptions {
 				"in the form of key:key1,operator:Equal,value:value1,effect:NoSchedule;" +
 				"key:key2,operator:Exists,effect:NoExecute,tolerationSeconds:6000");
 
+	public static final ConfigOption<String> TASK_MANAGER_POD_TEMPLATE_FILE =
+		key("kubernetes.taskmanager.podTemplateFile")
+			.stringType()
+			.noDefaultValue()
+			.withDescription("The user-specified pod template file of the TaskManager pod.");
+
+	public static final ConfigOption<String> JOB_MANAGER_POD_TEMPLATE_FILE =
+		key("kubernetes.jobmanager.podTemplateFile")
+			.stringType()
+			.noDefaultValue()
+			.withDescription("The user-specified pod template file of the JobManager pod.");
+
+	public static final ConfigOption<String> JOB_MANAGER_CONTAINER_NAME =
+		key("kubernetes.jobmanager.containerName")
+			.stringType()
+			.noDefaultValue()
+			.withDescription("The user-specified container name in pod template file of the JobManager pod.");
+
+	public static final ConfigOption<String> TASK_MANAGER_CONTAINER_NAME =
+		key("kubernetes.taskmanager.containerName")
+			.stringType()
+			.noDefaultValue()
+			.withDescription("The user-specified container name in pod template file of the TaskManager pod.");
+
 	public static final ConfigOption<Map<String, String>> REST_SERVICE_ANNOTATIONS =
 		key("kubernetes.rest-service.annotations")
 			.mapType()

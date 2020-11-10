@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -66,6 +67,8 @@ public class InitJobManagerDecoratorTest extends KubernetesJobManagerTestBase {
 	private static final List<Toleration> TOLERATION = Arrays.asList(
 		new Toleration("NoSchedule", "key1", "Equal", null, "value1"),
 		new Toleration("NoExecute", "key2", "Exists", 6000L, null));
+	private static final String podTemplateFile =
+		InitJobManagerDecoratorTest.class.getResource("/podTemplate.yaml").getPath();
 
 	private Pod resultPod;
 	private Container resultMainContainer;
@@ -78,6 +81,7 @@ public class InitJobManagerDecoratorTest extends KubernetesJobManagerTestBase {
 		this.flinkConfig.set(KubernetesConfigOptions.CONTAINER_IMAGE_PULL_SECRETS, IMAGE_PULL_SECRETS);
 		this.flinkConfig.set(KubernetesConfigOptions.JOB_MANAGER_ANNOTATIONS, ANNOTATIONS);
 		this.flinkConfig.setString(KubernetesConfigOptions.JOB_MANAGER_TOLERATIONS.key(), TOLERATION_STRING);
+		this.flinkConfig.set(KubernetesConfigOptions.JOB_MANAGER_POD_TEMPLATE_FILE, podTemplateFile);
 	}
 
 	@Override
@@ -166,6 +170,12 @@ public class InitJobManagerDecoratorTest extends KubernetesJobManagerTestBase {
 	public void testPodAnnotations() {
 		final Map<String, String> resultAnnotations = kubernetesJobManagerParameters.getAnnotations();
 		assertThat(resultAnnotations, is(equalTo(ANNOTATIONS)));
+	}
+
+	@Test
+	public void testPodTemplate() {
+		Optional<String> podTemplateFile = kubernetesJobManagerParameters.getPodTemplateFile();
+		assertTrue(podTemplateFile.isPresent());
 	}
 
 	@Test

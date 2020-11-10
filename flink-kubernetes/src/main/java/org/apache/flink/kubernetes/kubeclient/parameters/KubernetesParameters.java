@@ -77,6 +77,16 @@ public interface KubernetesParameters {
 	List<Map<String, String>> getTolerations();
 
 	/**
+	 * A string of user-specified pod template file for the JobManager and TaskManager pods.
+	 */
+	Optional<String> getPodTemplateFile();
+
+	/**
+	 * A string of user-specified container name in pod template file for the JobManager and TaskManager pods.
+	 */
+	Optional<String> getContainerName();
+
+	/**
 	 * Directory in Pod that stores the flink-conf.yaml, log4j.properties, and the logback.xml.
 	 */
 	String getFlinkConfDirInPod();

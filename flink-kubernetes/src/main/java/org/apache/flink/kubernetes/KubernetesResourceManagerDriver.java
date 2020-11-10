@@ -150,7 +150,7 @@ public class KubernetesResourceManagerDriver extends AbstractResourceManagerDriv
 		final KubernetesTaskManagerParameters parameters =
 				createKubernetesTaskManagerParameters(taskExecutorProcessSpec);
 		final KubernetesPod taskManagerPod =
-				KubernetesTaskManagerFactory.buildTaskManagerKubernetesPod(parameters);
+				KubernetesTaskManagerFactory.buildTaskManagerKubernetesPod(getKubeClient(), parameters);
 		final String podName = taskManagerPod.getName();
 		final CompletableFuture<KubernetesWorkerNode> requestResourceFuture = new CompletableFuture<>();
 

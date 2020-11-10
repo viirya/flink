@@ -121,7 +121,8 @@ public class Fabric8FlinkKubeClientTest extends KubernetesClientTestBase {
 		final KubernetesJobManagerParameters kubernetesJobManagerParameters =
 			new KubernetesJobManagerParameters(flinkConfig, clusterSpecification);
 		this.kubernetesJobManagerSpecification =
-			KubernetesJobManagerFactory.buildKubernetesJobManagerSpecification(kubernetesJobManagerParameters);
+			KubernetesJobManagerFactory.buildKubernetesJobManagerSpecification(
+				flinkKubeClient, kubernetesJobManagerParameters);
 	}
 
 	@Test
