@@ -80,6 +80,12 @@ public class DefaultKubeClientFactory implements KubeClientFactory {
 			LOG.info("Trying to load default kubernetes config.");
 
 			config = Config.autoConfigure(kubeContext);
+
+			String masterUrl = flinkConfig.getString(KubernetesConfigOptions.KUBE_MASTER_URL);
+			if (masterUrl != null) {
+				config.setMasterUrl(masterUrl);
+			}
+
 			LOG.info("config's Master URL: " + config.getMasterUrl().toString());
 		}
 

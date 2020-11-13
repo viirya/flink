@@ -95,6 +95,12 @@ public class KubernetesConfigOptions {
 		.withDescription("The kubernetes config file will be used to create the client. The default " +
 				"is located at ~/.kube/config");
 
+	public static final ConfigOption<String> KUBE_MASTER_URL =
+		key("kubernetes.master")
+			.stringType()
+			.noDefaultValue()
+			.withDescription("The internal kubernetes master (API server) address.");
+
 	public static final ConfigOption<String> NAMESPACE =
 		key("kubernetes.namespace")
 		.stringType()
