@@ -119,6 +119,11 @@ public class AbstractKubernetesParametersTest extends TestLogger {
 		}
 
 		@Override
+		public Optional<String> getPriorityClassname() {
+			throw new UnsupportedOperationException("NOT supported");
+		}
+
+		@Override
 		public Optional<String> getContainerName() {
 			throw new UnsupportedOperationException("NOT supported");
 		}

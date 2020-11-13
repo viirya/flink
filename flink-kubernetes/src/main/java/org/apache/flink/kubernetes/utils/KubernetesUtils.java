@@ -310,10 +310,10 @@ public class KubernetesUtils {
 			.addToLimits(Constants.RESOURCE_NAME_CPU, cpuQuantity);
 
 		// Set resource requests/limits if there are existing requests/limits.
-		if (currentRequirements.getRequests() != null) {
+		if (currentRequirements != null && currentRequirements.getRequests() != null) {
 			resourceRequirementsBuilder.addToRequests(currentRequirements.getRequests());
 		}
-		if (currentRequirements.getLimits() != null) {
+		if (currentRequirements != null && currentRequirements.getLimits() != null) {
 			resourceRequirementsBuilder.addToLimits(currentRequirements.getLimits());
 		}
 
