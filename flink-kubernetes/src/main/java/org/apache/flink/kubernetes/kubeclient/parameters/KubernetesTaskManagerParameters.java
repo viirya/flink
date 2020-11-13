@@ -93,7 +93,7 @@ public class KubernetesTaskManagerParameters extends AbstractKubernetesParameter
 
 	@Override
 	public Optional<String> getPriorityClassname() {
-		return flinkConfig.getOptional(KubernetesConfigOptions.TASK_MANAGER_POD_TEMPLATE_FILE);
+		return flinkConfig.getOptional(KubernetesConfigOptions.TASK_MANAGER_PRIORITY_CLASSNAME);
 	}
 
 	@Override
