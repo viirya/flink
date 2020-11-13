@@ -231,6 +231,18 @@ public class KubernetesConfigOptions {
 			.noDefaultValue()
 			.withDescription("The user-specified pod template file of the JobManager pod.");
 
+	public static final ConfigOption<String> TASK_MANAGER_PRIORITY_CLASSNAME =
+		key("kubernetes.taskmanager.priorityClassname")
+			.stringType()
+			.noDefaultValue()
+			.withDescription("The user-specified priority classname of the TaskManager pod.");
+
+	public static final ConfigOption<String> JOB_MANAGER_PRIORITY_CLASSNAME =
+		key("kubernetes.jobmanager.priorityClassname")
+			.stringType()
+			.noDefaultValue()
+			.withDescription("The user-specified priority classname of the JobManager pod.");
+
 	public static final ConfigOption<String> JOB_MANAGER_CONTAINER_NAME =
 		key("kubernetes.jobmanager.containerName")
 			.stringType()

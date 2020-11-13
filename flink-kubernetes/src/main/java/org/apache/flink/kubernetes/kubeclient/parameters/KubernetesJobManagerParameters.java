@@ -87,6 +87,11 @@ public class KubernetesJobManagerParameters extends AbstractKubernetesParameters
 	}
 
 	@Override
+	public Optional<String> getPriorityClassname() {
+		return flinkConfig.getOptional(KubernetesConfigOptions.JOB_MANAGER_PRIORITY_CLASSNAME);
+	}
+
+	@Override
 	public Optional<String> getContainerName() {
 		return flinkConfig.getOptional(KubernetesConfigOptions.JOB_MANAGER_CONTAINER_NAME);
 	}

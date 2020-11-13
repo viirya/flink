@@ -82,6 +82,11 @@ public interface KubernetesParameters {
 	Optional<String> getPodTemplateFile();
 
 	/**
+	 * A string of user-specified priority classname for the JobManager and TaskManager pods.
+	 */
+	Optional<String> getPriorityClassname();
+
+	/**
 	 * A string of user-specified container name in pod template file for the JobManager and TaskManager pods.
 	 */
 	Optional<String> getContainerName();
