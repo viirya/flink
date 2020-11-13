@@ -230,6 +230,7 @@ public class Fabric8FlinkKubeClient implements FlinkKubeClient {
 	public KubernetesWatch watchPodsAndDoCallback(
 			Map<String, String> labels,
 			WatchCallbackHandler<KubernetesPod> podCallbackHandler) {
+		LOG.info("K8S Master URL: " + this.internalClient.getMasterUrl().toString());
 		return new KubernetesWatch(
 			this.internalClient.pods()
 				.withLabels(labels)

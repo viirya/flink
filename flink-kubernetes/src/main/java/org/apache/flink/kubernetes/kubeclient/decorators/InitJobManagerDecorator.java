@@ -61,8 +61,8 @@ public class InitJobManagerDecorator extends AbstractKubernetesStepDecorator {
 		final Pod basicPod = new PodBuilder(flinkPod.getPod())
 			.withApiVersion(API_VERSION)
 			.editOrNewMetadata()
-				.withLabels(kubernetesJobManagerParameters.getLabels())
-				.withAnnotations(kubernetesJobManagerParameters.getAnnotations())
+				.addToLabels(kubernetesJobManagerParameters.getLabels())
+				.addToAnnotations(kubernetesJobManagerParameters.getAnnotations())
 				.endMetadata()
 			.editOrNewSpec()
 				.withServiceAccountName(kubernetesJobManagerParameters.getServiceAccount())
@@ -86,7 +86,8 @@ public class InitJobManagerDecorator extends AbstractKubernetesStepDecorator {
 		final ResourceRequirements requirements = KubernetesUtils.getResourceRequirements(
 				kubernetesJobManagerParameters.getJobManagerMemoryMB(),
 				kubernetesJobManagerParameters.getJobManagerCPU(),
-				Collections.emptyMap());
+				Collections.emptyMap(),
+				container.getResources());
 
 		return new ContainerBuilder(container)
 				.withName(kubernetesJobManagerParameters.getJobManagerMainContainerName())

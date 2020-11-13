@@ -61,9 +61,12 @@ public class KubernetesJobManagerFactory {
 		FlinkPod flinkPod = new FlinkPod.Builder().build();
 
 		Optional<String> templateFile = kubernetesJobManagerParameters.getPodTemplateFile();
+		System.out.println("templateFile: " + templateFile.toString());
 		if (templateFile.isPresent()) {
 			Optional<String> containerName = kubernetesJobManagerParameters.getContainerName();
+			System.out.println("containerName: " + containerName.toString());
 			flinkPod = client.loadPodFromTemplate(new File(templateFile.get()), containerName);
+			System.out.println("flinkPod: " + flinkPod.getMainContainer().getResources());
 		}
 		List<HasMetadata> accompanyingResources = new ArrayList<>();
 
@@ -92,6 +95,7 @@ public class KubernetesJobManagerFactory {
 			FlinkPod flinkPod,
 			KubernetesJobManagerParameters kubernetesJobManagerParameters) {
 		final Container resolvedMainContainer = flinkPod.getMainContainer();
+		System.out.println(resolvedMainContainer.getResources().getLimits());
 
 		final Pod resolvedPod = new PodBuilder(flinkPod.getPod())
 			.editOrNewSpec()

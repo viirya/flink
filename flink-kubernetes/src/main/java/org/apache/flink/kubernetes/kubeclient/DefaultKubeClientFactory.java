@@ -62,7 +62,7 @@ public class DefaultKubeClientFactory implements KubeClientFactory {
 
 		final String kubeConfigFile = flinkConfig.getString(KubernetesConfigOptions.KUBE_CONFIG_FILE);
 		if (kubeConfigFile != null) {
-			LOG.debug("Trying to load kubernetes config from file: {}.", kubeConfigFile);
+			LOG.info("Trying to load kubernetes config from file: {}.", kubeConfigFile);
 			try {
 				// If kubeContext is null, the default context in the kubeConfigFile will be used.
 				// Note: the third parameter kubeconfigPath is optional and is set to null. It is only used to rewrite
@@ -75,10 +75,12 @@ public class DefaultKubeClientFactory implements KubeClientFactory {
 			} catch (IOException e) {
 				throw new KubernetesClientException("Load kubernetes config failed.", e);
 			}
+			LOG.info("config's Master URL: " + config.getMasterUrl().toString());
 		} else {
-			LOG.debug("Trying to load default kubernetes config.");
+			LOG.info("Trying to load default kubernetes config.");
 
 			config = Config.autoConfigure(kubeContext);
+			LOG.info("config's Master URL: " + config.getMasterUrl().toString());
 		}
 
 		final KubernetesClient client = new DefaultKubernetesClient(config);

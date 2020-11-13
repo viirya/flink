@@ -292,9 +292,14 @@ public class KubernetesUtils {
 	 * @param mem Memory in mb.
 	 * @param cpu cpu.
 	 * @param externalResources external resources
+	 * @param currentRequirements existing resource requirements from container definition.
 	 * @return KubernetesResource requirements.
 	 */
-	public static ResourceRequirements getResourceRequirements(int mem, double cpu, Map<String, Long> externalResources) {
+	public static ResourceRequirements getResourceRequirements(
+			int mem,
+			double cpu,
+			Map<String, Long> externalResources,
+			ResourceRequirements currentRequirements) {
 		final Quantity cpuQuantity = new Quantity(String.valueOf(cpu));
 		final Quantity memQuantity = new Quantity(mem + Constants.RESOURCE_UNIT_MB);
 
@@ -303,6 +308,14 @@ public class KubernetesUtils {
 			.addToRequests(Constants.RESOURCE_NAME_CPU, cpuQuantity)
 			.addToLimits(Constants.RESOURCE_NAME_MEMORY, memQuantity)
 			.addToLimits(Constants.RESOURCE_NAME_CPU, cpuQuantity);
+
+		// Set resource requests/limits if there are existing requests/limits.
+		if (currentRequirements.getRequests() != null) {
+			resourceRequirementsBuilder.addToRequests(currentRequirements.getRequests());
+		}
+		if (currentRequirements.getLimits() != null) {
+			resourceRequirementsBuilder.addToLimits(currentRequirements.getLimits());
+		}
 
 		// Add the external resources to resource requirement.
 		for (Map.Entry<String, Long> externalResource: externalResources.entrySet()) {
