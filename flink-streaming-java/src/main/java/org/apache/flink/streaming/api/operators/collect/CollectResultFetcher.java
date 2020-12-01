@@ -94,7 +94,8 @@ public class CollectResultFetcher<T> {
 	public void setJobClient(JobClient jobClient) {
 		Preconditions.checkArgument(
 			jobClient instanceof CoordinationRequestGateway,
-			"Job client must be a CoordinationRequestGateway. This is a bug.");
+			"Job client must be a CoordinationRequestGateway, but got a " +
+				jobClient.getClass() + ". This is a bug.");
 		this.jobClient = jobClient;
 		this.gateway = (CoordinationRequestGateway) jobClient;
 	}
