@@ -247,6 +247,18 @@ public class KubernetesConfigOptions {
                             "The user-specified annotations that are set to the TaskManager pod. The value could be "
                                     + "in the form of a1:v1,a2:v2");
 
+    public static final ConfigOption<String> TASK_MANAGER_PRIORITY_CLASSNAME =
+            key("kubernetes.taskmanager.priorityClassname")
+                    .stringType()
+                    .noDefaultValue()
+                    .withDescription("The user-specified priority classname of the TaskManager pod.");
+
+    public static final ConfigOption<String> JOB_MANAGER_PRIORITY_CLASSNAME =
+            key("kubernetes.jobmanager.priorityClassname")
+                    .stringType()
+                    .noDefaultValue()
+                    .withDescription("The user-specified priority classname of the JobManager pod.");
+
     public static final ConfigOption<List<Map<String, String>>> JOB_MANAGER_TOLERATIONS =
             key("kubernetes.jobmanager.tolerations")
                     .mapType()

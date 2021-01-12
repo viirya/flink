@@ -41,12 +41,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /** General tests for the {@link InitJobManagerDecorator}. */
 public class InitTaskManagerDecoratorTest extends KubernetesTaskManagerTestBase {
@@ -67,6 +69,7 @@ public class InitTaskManagerDecoratorTest extends KubernetesTaskManagerTestBase 
             Arrays.asList(
                     new Toleration("NoSchedule", "key1", "Equal", null, "value1"),
                     new Toleration("NoExecute", "key2", "Exists", 6000L, null));
+    private static final String PRIORITY_CLASSNAME = "high-priority";
 
     private static final String RESOURCE_NAME = "test";
     private static final Long RESOURCE_AMOUNT = 2L;
@@ -84,6 +87,7 @@ public class InitTaskManagerDecoratorTest extends KubernetesTaskManagerTestBase 
         this.flinkConfig.set(
                 KubernetesConfigOptions.CONTAINER_IMAGE_PULL_SECRETS, IMAGE_PULL_SECRETS);
         this.flinkConfig.set(KubernetesConfigOptions.TASK_MANAGER_ANNOTATIONS, ANNOTATIONS);
+        this.flinkConfig.set(KubernetesConfigOptions.TASK_MANAGER_PRIORITY_CLASSNAME, PRIORITY_CLASSNAME);
         this.flinkConfig.setString(
                 KubernetesConfigOptions.TASK_MANAGER_TOLERATIONS.key(), TOLERATION_STRING);
 
@@ -202,6 +206,14 @@ public class InitTaskManagerDecoratorTest extends KubernetesTaskManagerTestBase 
         final Map<String, String> resultAnnotations =
                 kubernetesTaskManagerParameters.getAnnotations();
         assertThat(resultAnnotations, is(equalTo(ANNOTATIONS)));
+    }
+
+    @Test
+    public void testPodPriorityClassname() {
+        final Optional<String> resultPriorityClassname =
+                kubernetesTaskManagerParameters.getPriorityClassname();
+        assertTrue(resultPriorityClassname.isPresent());
+        assertThat(resultPriorityClassname.get(), is(equalTo(PRIORITY_CLASSNAME)));
     }
 
     @Test

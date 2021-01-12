@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
@@ -90,6 +91,11 @@ public class KubernetesTaskManagerParameters extends AbstractKubernetesParameter
         return flinkConfig
                 .getOptional(KubernetesConfigOptions.TASK_MANAGER_ANNOTATIONS)
                 .orElse(Collections.emptyMap());
+    }
+
+    @Override
+    public Optional<String> getPriorityClassname() {
+        return flinkConfig.getOptional(KubernetesConfigOptions.TASK_MANAGER_PRIORITY_CLASSNAME);
     }
 
     @Override

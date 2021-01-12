@@ -69,6 +69,11 @@ public interface KubernetesParameters {
     Map<String, String> getAnnotations();
 
     /**
+     * A string of user-specified priority classname for the JobManager and TaskManager pods.
+     */
+    Optional<String> getPriorityClassname();
+
+    /**
      * A collection of tolerations that are set to the JobManager and TaskManager Pod(s). Kubernetes
      * taints and tolerations work together to ensure that pods are not scheduled onto inappropriate
      * nodes.

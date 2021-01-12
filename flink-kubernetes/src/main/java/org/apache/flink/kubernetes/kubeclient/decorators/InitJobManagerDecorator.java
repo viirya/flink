@@ -56,8 +56,7 @@ public class InitJobManagerDecorator extends AbstractKubernetesStepDecorator {
 
     @Override
     public FlinkPod decorateFlinkPod(FlinkPod flinkPod) {
-        final Pod basicPod =
-                new PodBuilder(flinkPod.getPod())
+        final PodBuilder podBuilder = new PodBuilder(flinkPod.getPod())
                         .withApiVersion(API_VERSION)
                         .editOrNewMetadata()
                         .withLabels(kubernetesJobManagerParameters.getLabels())
@@ -74,9 +73,14 @@ public class InitJobManagerDecorator extends AbstractKubernetesStepDecorator {
                                                         KubernetesToleration.fromMap(e)
                                                                 .getInternalResource())
                                         .collect(Collectors.toList()))
-                        .endSpec()
-                        .build();
+                        .endSpec();
+        if (kubernetesJobManagerParameters.getPriorityClassname().isPresent()) {
+            podBuilder.editOrNewSpec()
+                    .withPriorityClassName(kubernetesJobManagerParameters.getPriorityClassname().get())
+                    .endSpec();
+        }
 
+        final Pod basicPod = podBuilder.build();
         final Container basicMainContainer = decorateMainContainer(flinkPod.getMainContainer());
 
         return new FlinkPod.Builder(flinkPod)
